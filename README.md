@@ -1,4 +1,4 @@
-- icons from Heroicons
+- icons from Heroicons, https://heroicons.com, documentation: https://github.com/tailwindlabs/heroicons#react
 - Font is merriweather
 - handle error states, loading states, no data states
 - modal to edit notes/todos
