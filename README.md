@@ -1,0 +1,6 @@
+- icons from Heroicons
+- Font is merriweather
+- handle error states, loading states, no data states
+- modal to edit notes/todos
+- dates using date/fns
+- verify API mock works in cypress test

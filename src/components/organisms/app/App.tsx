@@ -1,10 +1,24 @@
-import { useState } from 'react';
-import AppThemeProvider from '../../themes/AppThemeProvider';
-import logo from '../../logo.svg';
+import { useState, useEffect } from 'react';
+import AppThemeProvider from '../../../themes/AppThemeProvider';
+import logo from '../../../logo.svg';
 import { AppContainer, Logo, Header, Link, Button } from './styles';
+import TodosApi from '../../api/todos';
 
 function App() {
   const [count, setCount] = useState(0);
+
+  const [isLoading, setIsLoading] = useState(true);
+
+  useEffect(() => {
+    console.log('request made');
+    async function handleOnLoad() {
+      setIsLoading(true);
+      const response = await TodosApi.getTodos();
+      console.log(response);
+      setIsLoading(false);
+    }
+    handleOnLoad();
+  }, []);
 
   return (
     <AppThemeProvider>
