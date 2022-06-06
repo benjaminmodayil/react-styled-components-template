@@ -19,14 +19,8 @@ prepare().then(() => {
       <BrowserRouter>
         <Routes>
           <Route path="/" element={<App />}>
-            <Route path="/invoices" element={<h1>Invoices Tab!</h1>} />
-            <Route path="/expenses" element={<h1>Expenses Tab!</h1>} />
-            {/* <Route index element={<Home />} />
-            <Route path="teams" element={<Teams />}>
-              <Route path=":teamId" element={<Team />} />
-              <Route path="new" element={<NewTeamForm />} />
-              <Route index element={<LeagueStandings />} />
-            </Route> */}
+            <Route path="invoices" element={<h1>Invoices Tab!</h1>} />
+            <Route path="expenses" element={<h1>Expenses Tab!</h1>} />
           </Route>
         </Routes>
       </BrowserRouter>

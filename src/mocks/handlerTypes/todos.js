@@ -28,7 +28,7 @@ export default [
     );
   }),
 
-  rest.get('/todo:id', (req, res, ctx) => {
+  rest.get('/todo/:id', (req, res, ctx) => {
     const todoId = req.url.searchParams.get('id');
 
     let miniAppTodos = localStorage.getItem('mini-app-todos');
@@ -79,7 +79,7 @@ export default [
     );
   }),
 
-  rest.patch('/update/todo:id', (req, res, ctx) => {
+  rest.patch('/update/todo/:id', (req, res, ctx) => {
     const todoId = req.url.searchParams.get('id');
     let miniAppTodos = localStorage.getItem('mini-app-todos');
     let existingTodos = miniAppTodos ? JSON.parse(miniAppTodos) : [];
@@ -119,7 +119,7 @@ export default [
     }
   }),
 
-  rest.delete('/delete/todo:id', (req, res, ctx) => {
+  rest.delete('/delete/todo/:id', (req, res, ctx) => {
     const todoId = req.url.searchParams.get('id');
     let miniAppTodos = localStorage.getItem('mini-app-todos');
     let existingTodos = miniAppTodos ? JSON.parse(miniAppTodos) : [];

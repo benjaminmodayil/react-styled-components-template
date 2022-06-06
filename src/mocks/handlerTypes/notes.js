@@ -27,7 +27,7 @@ export default [
     );
   }),
 
-  rest.get('/note:id', (req, res, ctx) => {
+  rest.get('/note/:id', (req, res, ctx) => {
     const noteId = req.url.searchParams.get('id');
 
     let miniAppNotes = localStorage.getItem('mini-app-notes');
@@ -87,7 +87,7 @@ export default [
     );
   }),
 
-  rest.patch('/update/note:id', (req, res, ctx) => {
+  rest.patch('/update/note/:id', (req, res, ctx) => {
     const noteId = req.url.searchParams.get('id');
     let miniAppNotes = localStorage.getItem('mini-app-notes');
     let existingNotes = miniAppNotes ? JSON.parse(miniAppNotes) : [];
@@ -127,7 +127,7 @@ export default [
     }
   }),
 
-  rest.delete('/delete/note:id', (req, res, ctx) => {
+  rest.delete('/delete/note/:id', (req, res, ctx) => {
     const noteId = req.url.searchParams.get('id');
     let miniAppNotes = localStorage.getItem('mini-app-notes');
     let existingNotes = miniAppNotes ? JSON.parse(miniAppNotes) : [];
