@@ -12,8 +12,8 @@ function App() {
   useEffect(() => {
     async function handleOnLoad() {
       setIsLoading(true);
-      const response = await TodosApi.getTodos();
-      console.log(response);
+      const response = await // API request
+      // console.log(response);
       setIsLoading(false);
     }
     handleOnLoad();

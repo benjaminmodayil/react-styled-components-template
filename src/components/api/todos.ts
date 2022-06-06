@@ -1,6 +1,6 @@
 class TodosApi {
-  static async getTodos() {
-    const url = `/todos`;
+  static async getSomething() {
+    const url = `/test`;
     const method = 'GET';
     const options = { method };
     const response = await fetch(url, options);
