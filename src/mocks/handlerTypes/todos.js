@@ -15,7 +15,7 @@ const initialTodos = [
 export default [
   rest.get('/todos', (req, res, ctx) => {
     let miniAppTodos = localStorage.getItem('mini-app-todos');
-    let existingTodos = miniAppTodos ? JSON.parse(miniAppTodos) : null;
+    let existingTodos = miniAppTodos ? JSON.parse(miniAppTodos) : [];
     if (!Boolean(existingTodos)) {
       localStorage.setItem('mini-app-todos', JSON.stringify(initialTodos));
       existingTodos = initialTodos;
@@ -32,7 +32,7 @@ export default [
     const todoId = req.url.searchParams.get('id');
 
     let miniAppTodos = localStorage.getItem('mini-app-todos');
-    let existingTodos = miniAppTodos ? JSON.parse(miniAppTodos) : null;
+    let existingTodos = miniAppTodos ? JSON.parse(miniAppTodos) : [];
     const matchingTodo = existingTodos.find(todo => todo.id === todoId);
     if (!Boolean(existingTodos) || !Boolean(matchingTodo)) {
       return res(
@@ -49,6 +49,9 @@ export default [
   }),
 
   rest.post('/create/todo', (req, res, ctx) => {
+    let miniAppTodos = localStorage.getItem('mini-app-todos');
+    let existingTodos = miniAppTodos ? JSON.parse(miniAppTodos) : [];
+
     const newTodo = {
       isCompleted: false,
       description: '',
@@ -67,6 +70,7 @@ export default [
         })
       );
     }
+    localStorage.setItem('mini-app-todos', JSON.stringify([...existingTodos, newTodo]));
 
     return res(
       // Respond with a 200 status code
@@ -78,7 +82,7 @@ export default [
   rest.patch('/update/todo:id', (req, res, ctx) => {
     const todoId = req.url.searchParams.get('id');
     let miniAppTodos = localStorage.getItem('mini-app-todos');
-    let existingTodos = miniAppTodos ? JSON.parse(miniAppTodos) : null;
+    let existingTodos = miniAppTodos ? JSON.parse(miniAppTodos) : [];
     const matchingTodo = existingTodos.find(todo => todo.id === todoId);
 
     if (!Boolean(existingTodos) || !matchingTodo) {
@@ -89,6 +93,17 @@ export default [
         })
       );
     } else {
+      const updatedTodos = existingTodos.map(todo => {
+        if (todo.id === todoId) {
+          return {
+            ...todo,
+            ...req.body,
+            lastUpdated: new Date().getTime(),
+          };
+        }
+        return todo;
+      });
+      localStorage.setItem('mini-app-todos', JSON.stringify(updatedTodos));
       const updatedTodo = {
         ...matchingTodo,
         ...req.body,
@@ -101,6 +116,25 @@ export default [
           data: updatedTodo,
         })
       );
+    }
+  }),
+
+  rest.delete('/delete/todo:id', (req, res, ctx) => {
+    const todoId = req.url.searchParams.get('id');
+    let miniAppTodos = localStorage.getItem('mini-app-todos');
+    let existingTodos = miniAppTodos ? JSON.parse(miniAppTodos) : [];
+    const remainingTodos = existingTodos.filter(todo => todo.id !== todoId);
+
+    if (!Boolean(existingTodos) || !matchingTodo) {
+      return res(
+        ctx.status(400),
+        ctx.json({
+          message: 'Existing todo not found.',
+        })
+      );
+    } else {
+      localStorage.setItem('mini-app-todos', JSON.stringify(remainingTodos));
+      return res(ctx.status(203));
     }
   }),
 ];

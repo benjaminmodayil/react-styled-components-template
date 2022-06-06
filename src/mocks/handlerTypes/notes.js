@@ -14,7 +14,7 @@ const initialNotes = [
 export default [
   rest.get('/notes', (req, res, ctx) => {
     let miniAppNotes = localStorage.getItem('mini-app-notes');
-    let existingNotes = miniAppNotes ? JSON.parse(miniAppNotes) : null;
+    let existingNotes = miniAppNotes ? JSON.parse(miniAppNotes) : [];
     if (!Boolean(existingNotes)) {
       localStorage.setItem('mini-app-notes', JSON.stringify(initialNotes));
       existingNotes = initialNotes;
@@ -31,7 +31,7 @@ export default [
     const noteId = req.url.searchParams.get('id');
 
     let miniAppNotes = localStorage.getItem('mini-app-notes');
-    let existingNotes = miniAppNotes ? JSON.parse(miniAppNotes) : null;
+    let existingNotes = miniAppNotes ? JSON.parse(miniAppNotes) : [];
     const matchingNote = existingNotes.find(note => note.id === noteId);
     if (!Boolean(existingNotes) || !Boolean(matchingNote)) {
       return res(
@@ -48,8 +48,12 @@ export default [
   }),
 
   rest.post('/create/note', (req, res, ctx) => {
+    let miniAppNotes = localStorage.getItem('mini-app-notes');
+    let existingNotes = miniAppNotes ? JSON.parse(miniAppNotes) : [];
+
     const newNote = {
-      content: '',
+      isCompleted: false,
+      description: '',
       ...req.body,
       id: uuidv4(),
       createdOn: new Date().getTime(),
@@ -65,16 +69,16 @@ export default [
         })
       );
     }
-
     if (!req.body.content) {
       return res(
         // Respond with a 200 status code
         ctx.status(400),
         ctx.json({
-          message: 'You need to add a title to your note.',
+          message: 'You need to add content to your note.',
         })
       );
     }
+    localStorage.setItem('mini-app-notes', JSON.stringify([...existingNotes, newNote]));
 
     return res(
       // Respond with a 200 status code
@@ -86,7 +90,7 @@ export default [
   rest.patch('/update/note:id', (req, res, ctx) => {
     const noteId = req.url.searchParams.get('id');
     let miniAppNotes = localStorage.getItem('mini-app-notes');
-    let existingNotes = miniAppNotes ? JSON.parse(miniAppNotes) : null;
+    let existingNotes = miniAppNotes ? JSON.parse(miniAppNotes) : [];
     const matchingNote = existingNotes.find(note => note.id === noteId);
 
     if (!Boolean(existingNotes) || !matchingNote) {
@@ -97,6 +101,17 @@ export default [
         })
       );
     } else {
+      const updatedNotes = existingNotes.map(note => {
+        if (note.id === noteId) {
+          return {
+            ...note,
+            ...req.body,
+            lastUpdated: new Date().getTime(),
+          };
+        }
+        return note;
+      });
+      localStorage.setItem('mini-app-notes', JSON.stringify(updatedNotes));
       const updatedNote = {
         ...matchingNote,
         ...req.body,
@@ -109,6 +124,25 @@ export default [
           data: updatedNote,
         })
       );
+    }
+  }),
+
+  rest.delete('/delete/note:id', (req, res, ctx) => {
+    const noteId = req.url.searchParams.get('id');
+    let miniAppNotes = localStorage.getItem('mini-app-notes');
+    let existingNotes = miniAppNotes ? JSON.parse(miniAppNotes) : [];
+    const remainingNotes = existingNotes.filter(note => note.id !== noteId);
+
+    if (!Boolean(existingNotes) || !matchingNote) {
+      return res(
+        ctx.status(400),
+        ctx.json({
+          message: 'Existing note not found.',
+        })
+      );
+    } else {
+      localStorage.setItem('mini-app-notes', JSON.stringify(remainingNotes));
+      return res(ctx.status(203));
     }
   }),
 ];
