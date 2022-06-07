@@ -1,6 +1,5 @@
 import { useState, useEffect } from 'react';
-import { Link } from 'react-router-dom';
-import AppThemeProvider from '../../../themes/AppThemeProvider';
+import { Outlet, Link } from 'react-router-dom';
 import { AppContainer, Nav, Header } from './styles';
 import TodosApi from '../../api/todos';
 
@@ -20,17 +19,16 @@ function App() {
   }, []);
 
   return (
-    <AppThemeProvider>
-      <AppContainer>
-        <Nav>
-          <Link to="/">Home</Link> | <Link to="/invoices">Invoices</Link> |{' '}
-          <Link to="/expenses">Expenses</Link>
-        </Nav>
-        <Header>
-          <p>👋 Hello. This is a React project starter.</p>
-        </Header>
-      </AppContainer>
-    </AppThemeProvider>
+    <AppContainer>
+      <Nav>
+        <Link to="/">Home</Link> | <Link to="/invoices">Invoices</Link> |{' '}
+        <Link to="/expenses">Expenses</Link>
+      </Nav>
+      <Outlet />
+      <Header>
+        <p>👋 Hello. This is a React project starter.</p>
+      </Header>
+    </AppContainer>
   );
 }
 
